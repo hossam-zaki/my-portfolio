@@ -16,13 +16,25 @@
  * Adds a random greeting to the page.
  */
 function addRandomGreeting() {
-  const greetings =
-      ['Here\'s to the crazy ones', 'The Misfits', 'The Rebels', 'The round pegs in the square holes'];
+  const greetings = [
+    "Here's to the crazy ones",
+    "The Misfits",
+    "The Rebels",
+    "The round pegs in the square holes",
+  ];
 
   // Pick a random greeting.
   const greeting = greetings[Math.floor(Math.random() * greetings.length)];
 
   // Add it to the page.
-  const greetingContainer = document.getElementById('greeting-container');
+  const greetingContainer = document.getElementById("greeting-container");
   greetingContainer.innerText = greeting;
+}
+
+function getWebsite() {
+  fetch("/data")
+    .then((response) => response.text())
+    .then((quote) => {
+      document.getElementById("website-container").innerText = quote;
+    });
 }
