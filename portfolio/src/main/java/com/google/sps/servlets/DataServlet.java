@@ -15,6 +15,8 @@
 package com.google.sps.servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -26,12 +28,21 @@ import javax.servlet.http.HttpServletResponse;
  * comments data
  */
 @WebServlet("/data")
-public class DataServlet extends HttpServlet {
+public final class DataServlet extends HttpServlet {
+
+  private List<String> quotes;
+
+  @Override
+  public void init() {
+    quotes = new ArrayList<>();
+    quotes.add("www.realcollegeboss.com");
+    quotes.add("apollohealth.herokuapp.com/");
+  }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String quote = quotes.get((int) (Math.random() * quotes.size()));
     response.setContentType("text/html;");
-    response.getWriter().println("<h1>Hello Hossam!</h1>");
-
+    response.getWriter().println(quote);
   }
 }
