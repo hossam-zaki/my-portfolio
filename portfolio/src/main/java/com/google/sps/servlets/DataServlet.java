@@ -41,8 +41,19 @@ public final class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String quote = quotes.get((int) (Math.random() * quotes.size()));
-    response.setContentType("text/html;");
-    response.getWriter().println(quote);
+    // String quote = quotes.get((int) (Math.random() * quotes.size()));
+    response.setContentType("application/JSON;");
+    response.getWriter().println(buildJSON());
+  }
+
+  private String buildJSON() {
+    String json = "{";
+    json += "\"Freshman_Summer\": ";
+    json += "\"European Bioinformatics Institute\"";
+    json += ", ";
+    json += "\"SophomoreSummer\": ";
+    json += "\"Google SPS\"";
+    json += "}";
+    return json;
   }
 }
