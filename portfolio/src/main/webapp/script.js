@@ -31,10 +31,22 @@ function addRandomGreeting() {
   greetingContainer.innerText = greeting;
 }
 
-function getWebsite() {
+function getEmployment() {
   fetch("/data")
-    .then((response) => response.text())
-    .then((quote) => {
-      document.getElementById("website-container").innerText = quote;
+    .then((response) => response.json())
+    .then((data) => {
+      const statsListElement = document.getElementById("employment-container");
+      statsListElement.appendChild(
+        createListElement("Freshman Year: " + data.Freshman_Summer)
+      );
+      statsListElement.appendChild(
+        createListElement("Sophomore Year: " + data.Sophomore_Summer)
+      );
     });
+}
+/** Creates an <li> element containing text. */
+function createListElement(text) {
+  const liElement = document.createElement("li");
+  liElement.innerText = text;
+  return liElement;
 }

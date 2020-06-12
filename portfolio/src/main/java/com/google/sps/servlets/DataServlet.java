@@ -51,7 +51,7 @@ public final class DataServlet extends HttpServlet {
     json += "\"Freshman_Summer\": ";
     json += "\"European Bioinformatics Institute\"";
     json += ", ";
-    json += "\"SophomoreSummer\": ";
+    json += "\"Sophomore_Summer\": ";
     json += "\"Google SPS\"";
     json += "}";
     return json;
