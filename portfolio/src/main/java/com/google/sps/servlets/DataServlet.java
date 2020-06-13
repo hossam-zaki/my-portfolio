@@ -31,9 +31,11 @@ import javax.servlet.http.HttpServletResponse;
 public final class DataServlet extends HttpServlet {
 
   private List<String> quotes;
+  private List<String> comments;
 
   @Override
   public void init() {
+    comments = new ArrayList<>();
     quotes = new ArrayList<>();
     quotes.add("www.realcollegeboss.com");
     quotes.add("apollohealth.herokuapp.com/");
@@ -44,6 +46,14 @@ public final class DataServlet extends HttpServlet {
     // String quote = quotes.get((int) (Math.random() * quotes.size()));
     response.setContentType("application/JSON;");
     response.getWriter().println(buildJSON());
+  }
+
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String comment = request.getParameter("comment");
+    System.out.println(comment);
+    comments.add(comment);
+    response.sendRedirect("/index.html");
   }
 
   private String buildJSON() {
