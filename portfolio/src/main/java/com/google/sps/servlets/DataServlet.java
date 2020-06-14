@@ -15,13 +15,15 @@
 package com.google.sps.servlets;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
 
 /**
  * Servlet that returns some example content. TODO: modify this file to handle
@@ -30,15 +32,11 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public final class DataServlet extends HttpServlet {
 
-  private List<String> quotes;
-  private List<String> comments;
+  
 
   @Override
   public void init() {
-    comments = new ArrayList<>();
-    quotes = new ArrayList<>();
-    quotes.add("www.realcollegeboss.com");
-    quotes.add("apollohealth.herokuapp.com/");
+    
   }
 
   @Override
@@ -50,9 +48,18 @@ public final class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
     String comment = request.getParameter("comment");
-    System.out.println(comment);
-    comments.add(comment);
+
+    Entity taskEntity = new Entity("Comment");
+    long timestamp = System.currentTimeMillis();
+
+    taskEntity.setProperty("title", comment);
+    taskEntity.setProperty("timestamp", timestamp);
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    datastore.put(taskEntity);
+
     response.sendRedirect("/index.html");
   }
 
