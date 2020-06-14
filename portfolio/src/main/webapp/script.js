@@ -31,22 +31,21 @@ function addRandomGreeting() {
   greetingContainer.innerText = greeting;
 }
 
-function getEmployment() {
+function getComments() {
   fetch("/data")
     .then((response) => response.json())
     .then((data) => {
-      const statsListElement = document.getElementById("employment-container");
-      statsListElement.appendChild(
-        createListElement("Freshman Year: " + data.Freshman_Summer)
-      );
-      statsListElement.appendChild(
-        createListElement("Sophomore Year: " + data.Sophomore_Summer)
-      );
+      console.log(data);
+      const statsListElement = document.getElementById("comment-container");
+      data.forEach((comment) => {
+        console.log(comment);
+        statsListElement.appendChild(createListElement(comment));
+      });
     });
 }
 /** Creates an <li> element containing text. */
 function createListElement(text) {
   const liElement = document.createElement("li");
-  liElement.innerText = text;
+  liElement.innerText = text.title;
   return liElement;
 }

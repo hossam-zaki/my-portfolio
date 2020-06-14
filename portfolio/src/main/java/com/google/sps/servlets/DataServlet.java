@@ -15,6 +15,8 @@
 package com.google.sps.servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -24,6 +26,10 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.repackaged.com.google.gson.Gson;
 
 /**
  * Servlet that returns some example content. TODO: modify this file to handle
@@ -32,18 +38,33 @@ import com.google.appengine.api.datastore.Entity;
 @WebServlet("/data")
 public final class DataServlet extends HttpServlet {
 
-  
-
   @Override
   public void init() {
-    
+
   }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // String quote = quotes.get((int) (Math.random() * quotes.size()));
-    response.setContentType("application/JSON;");
-    response.getWriter().println(buildJSON());
+    // response.setContentType("application/JSON;");
+    // response.getWriter().println(buildJSON());
+    Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery results = datastore.prepare(query);
+
+    List<comment> comments = new ArrayList<comment>();
+    for (Entity entity : results.asIterable()) {
+      String title = (String) entity.getProperty("title");
+      long timestamp = (long) entity.getProperty("timestamp");
+      comment comment = new comment(title, timestamp);
+      comments.add(comment);
+    }
+
+    Gson gson = new Gson();
+
+    response.setContentType("application/json;");
+    response.getWriter().println(gson.toJson(comments));
   }
 
   @Override
