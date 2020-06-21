@@ -30,6 +30,9 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.repackaged.com.google.gson.Gson;
+import com.google.cloud.translate.Translate;
+import com.google.cloud.translate.TranslateOptions;
+import com.google.cloud.translate.Translation;
 
 /**
  * Servlet that returns some example content. TODO: modify this file to handle
@@ -49,21 +52,27 @@ public final class DataServlet extends HttpServlet {
     // response.setContentType("application/JSON;");
     // response.getWriter().println(buildJSON());
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
-
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
+    String languageCode = request.getParameter("code");
 
     List<comment> comments = new ArrayList<comment>();
     for (Entity entity : results.asIterable()) {
+
       String title = (String) entity.getProperty("title");
       long timestamp = (long) entity.getProperty("timestamp");
-      comment comment = new comment(title, timestamp);
+      Translate translate = TranslateOptions.getDefaultInstance().getService();
+      Translation translation = translate.translate(title, Translate.TranslateOption.targetLanguage(languageCode));
+      String translatedText = translation.getTranslatedText();
+      comment comment = new comment(translatedText, timestamp);
+      System.out.println(translatedText);
       comments.add(comment);
     }
 
     Gson gson = new Gson();
 
     response.setContentType("application/json;");
+    response.setCharacterEncoding("UTF-8");
     response.getWriter().println(gson.toJson(comments));
   }
 
