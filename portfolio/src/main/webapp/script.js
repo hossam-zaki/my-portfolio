@@ -32,11 +32,14 @@ function addRandomGreeting() {
 }
 
 function getComments() {
-  fetch("/data")
+  var e = document.getElementById("languages");
+  var strCode = e.options[e.selectedIndex].value;
+  fetch("/data?code=" + strCode)
     .then((response) => response.json())
     .then((data) => {
       console.log(data);
       const statsListElement = document.getElementById("comment-container");
+      statsListElement.innerHTML = "";
       data.forEach((comment) => {
         console.log(comment);
         statsListElement.appendChild(createListElement(comment));
